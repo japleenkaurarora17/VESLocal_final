@@ -153,7 +153,7 @@ test('VESLocal Full-Stack Experiment API Test Suite', async (t) => {
       method: 'POST'
     }, {
      email: 'admin.moderator@ves.ac.in',
-password: process.env.ADMIN_PASSWORD
+password: 'TestAdminPassword123!'
     });
     assert.strictEqual(res.statusCode, 200);
     assert.strictEqual(res.body.success, true);
