@@ -128,7 +128,7 @@ app.use(errorHandler);
 export async function startServer(port = process.env.PORT || 5000) {
   await connectDB();
   return new Promise((resolve) => {
-    server.listen(port, '127.0.0.1', () => {
+   server.listen(port, '0.0.0.0', () => {
       const actualPort = server.address().port;
       if (process.env.NODE_ENV !== 'test') {
         console.log(`===============================================`);

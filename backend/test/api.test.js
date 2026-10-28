@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import http from 'node:http';
 import { startServer, server } from '../server.js';
-
+import mongoose from 'mongoose';
 let activePort = null;
 let runningServer = null;
 
@@ -49,11 +49,18 @@ test('VESLocal Full-Stack Experiment API Test Suite', async (t) => {
   runningServer = await startServer(0);
   activePort = runningServer.address().port;
 
-  t.after(() => {
-    return new Promise(resolve => {
-      runningServer.close(resolve);
+  t.after(async () => {
+  if (runningServer?.listening) {
+    await new Promise((resolve, reject) => {
+      runningServer.close((error) => {
+        if (error) reject(error);
+        else resolve();
+      });
     });
-  });
+  }
+
+  await mongoose.disconnect();
+});
 
   let createdStudentId = null;
   let authToken = null;
@@ -145,8 +152,8 @@ test('VESLocal Full-Stack Experiment API Test Suite', async (t) => {
       path: '/api/auth/login',
       method: 'POST'
     }, {
-      email: 'admin.moderator@ves.ac.in',
-      password: 'adminPassword123'
+     email: 'admin.moderator@ves.ac.in',
+password: process.env.ADMIN_PASSWORD
     });
     assert.strictEqual(res.statusCode, 200);
     assert.strictEqual(res.body.success, true);
